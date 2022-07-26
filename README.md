@@ -1,15 +1,19 @@
-## CalendarJS
+## CalendarJS [![NPM link](https://img.shields.io/badge/%40skolacode%2Fcalendar--js-npm-red)](https://www.npmjs.com/package/@skolacode/calendar-js)
 
-A simple and light weight JavaScript calendar generator.
+> A simple and light weight JavaScript calendar generator.
 
 ### Installation
 
+Install with [npm](https://www.npmjs.com/):
+
+```sh
+$ npm install --save @skolacode/calendar-js
 ```
-npm install @skolacode/calendar-js
 
-// or
+Install with [yarn](https://yarnpkg.com):
 
-yarn add @skolacode/calendar-js
+```sh
+$ yarn add @skolacode/calendar-js
 ```
 
 ### Usage
@@ -32,42 +36,7 @@ response:
         weekday: 'Sunday',
         isCurrentMonth: false
       },
-      {
-        date: 2022-06-26T16:00:00.000Z,
-        day: 27,
-        weekday: 'Monday',
-        isCurrentMonth: false
-      },
-      {
-        date: 2022-06-27T16:00:00.000Z,
-        day: 28,
-        weekday: 'Tuesday',
-        isCurrentMonth: false
-      },
-      {
-        date: 2022-06-28T16:00:00.000Z,
-        day: 29,
-        weekday: 'Wednesday',
-        isCurrentMonth: false
-      },
-      {
-        date: 2022-06-29T16:00:00.000Z,
-        day: 30,
-        weekday: 'Thursday',
-        isCurrentMonth: false
-      },
-      {
-        date: 2022-06-30T16:00:00.000Z,
-        day: 1,
-        weekday: 'Friday',
-        isCurrentMonth: true
-      },
-      {
-        date: 2022-07-01T16:00:00.000Z,
-        day: 2,
-        weekday: 'Saturday',
-        isCurrentMonth: true
-      }
+      ...
     ],
     [...],
     ....
