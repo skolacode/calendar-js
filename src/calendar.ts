@@ -32,7 +32,7 @@ const previous = (month: number, year: number): TPreviousMonth => {
   return { previousYear, previousMonth };
 };
 
-export const daysInMonth = (month: number, year: number) => {
+export const daysInMonth = (month: number, year: number): number => {
   return 32 - new Date(year, month, 32).getDate();
 };
 

@@ -81,7 +81,7 @@ response:
 
 ### Methods
 
-**getCalendar(month: number, year: number, startingDay?: number)**
+**getCalendar(month: number, year: number, startingDay?: number): [ICalendar](#types)**
 
 Parameters
 
@@ -93,7 +93,7 @@ Parameters
 
 ---
 
-**daysInMonth(month: number, year: number)**
+**daysInMonth(month: number, year: number): number**
 
 Return the total number of days in a month.
 
@@ -103,6 +103,33 @@ Parameters
 | ----- | ------ | -------- | ------- | -------------------------------------------------------------- |
 | month | Number | Yes      | -       | The month of the calendar (0 to 11). 0 = January, 1 = February |
 | year  | Number | Yes      | -       | The year of the calendar                                       |
+
+### Types
+
+```jsx
+type TWeekdays = 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
+
+type TDate = {
+  date: Date,
+  day: number,
+  isCurrentMonth: boolean,
+  weekday: TWeekdays,
+};
+
+interface ICalendar {
+  calendar: TDate[][];
+  month: number;
+  year: number;
+  next: {
+    month: number,
+    year: number,
+  };
+  previous: {
+    month: number,
+    year: number,
+  };
+}
+```
 
 ### Contributing
 
