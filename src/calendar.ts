@@ -58,7 +58,13 @@ export interface ICalendar {
 }
 
 export const getCalendar = (month: number, year: number, startingDay: number = 1): ICalendar => {
-  const firstDay = new Date(year, month).getDay();
+  let firstDay = new Date(year, month).getDay();
+
+  // NOTE : getDay() will return 0 when 1st day of the week occurs on Sunday
+  if (firstDay === 0) {
+    firstDay = 7;
+  }
+
   const daysInCalendar = daysInMonth(month, year);
   const calendar: TDate[][] = [];
 
