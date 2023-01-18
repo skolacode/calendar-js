@@ -91,11 +91,11 @@ export const getCalendar = (
     extraWeek = extraWeekDefault
   }: any = options;
 
-  let startingDay_ = startingDay as number;
+  let startingDayReAssign = startingDay as number;
   if (typeof startingDay !== 'number') {
     Object.values(WEEKDAYS).forEach((dayName, index) => {
       if (`${startingDay}`.toLowerCase() === dayName.toLowerCase()) {
-        startingDay_ = index;
+        startingDayReAssign = index;
       }
     });
   }
@@ -103,11 +103,11 @@ export const getCalendar = (
   let firstDay = new Date(year, month).getDay();
   // NOTE : `getDay()` will be used as cell-index for property `calendar[]`
   // so, `firstDay` will be offset if `startingDay` is not SUNDAY | 0
-  if (startingDay_ > 0 && firstDay === 0) {
+  if (startingDayReAssign > 0 && firstDay === 0) {
     firstDay = 7;
   }
 
-  const offsetPrevMonth = firstDay - startingDay_;
+  const offsetPrevMonth = firstDay - startingDayReAssign;
   const daysInCalendar = daysInMonth(month, year);
   const calendar: TDate[][] = [];
 
