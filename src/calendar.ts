@@ -57,14 +57,57 @@ export interface ICalendar {
   };
 }
 
-export const getCalendar = (month: number, year: number, startingDay: number = 1): ICalendar => {
-  let firstDay = new Date(year, month).getDay();
+export type TStartingDay = 0 | 'SUNDAY' | 'Sunday' | 'sunday' | 1 | 'MONDAY' | 'Monday' | 'monday' | 2 | 'TUESDAY' | 'Tuesday' | 'tuesday' | 3 | 'WEDNESDAY' | 'Wednesday' | 'wednesday' | 4 | 'THURSDAY' | 'Thursday' | 'thursday' | 5 | 'FRIDAY' | 'Friday' | 'friday' | 6 | 'SATURDAY' | 'Saturday' | 'saturday';
 
-  // NOTE : getDay() will return 0 when 1st day of the week occurs on Sunday
-  if (firstDay === 0) {
+export interface IOptions {
+  startingDay?: TStartingDay | number;
+  extraWeek?: boolean;
+}
+
+// NOTE : old version is populating `calendar[]` array for 6 indexes.
+// the latest need to pass options `extraWeek` as `false` for un-populate the extra row
+const MAX_WEEK_ROW = 6;
+
+export const getCalendar = (
+  month: number,
+  year: number,
+  options: IOptions | number = {}, // NOTE : type `number` is a fallback for old version
+): ICalendar => {
+  const startingDayDefault = 1;
+  const extraWeekDefault = true;
+  
+  // NOTE : Fallback for old version.
+  // the latest should use options as an object
+  const isLegacy = typeof options === 'number';
+  if (isLegacy) {
+    options = {
+      startingDay: options as number,
+      extraWeek: extraWeekDefault
+    };
+  }
+
+  const {
+    startingDay = startingDayDefault,
+    extraWeek = extraWeekDefault
+  }: any = options;
+
+  let startingDay_ = startingDay as number;
+  if (typeof startingDay !== 'number') {
+    Object.values(WEEKDAYS).forEach((dayName, index) => {
+      if (`${startingDay}`.toLowerCase() === dayName.toLowerCase()) {
+        startingDay_ = index;
+      }
+    });
+  }
+
+  let firstDay = new Date(year, month).getDay();
+  // NOTE : `getDay()` will be used as cell-index for property `calendar[]`
+  // so, `firstDay` will be offset if `startingDay` is not SUNDAY | 0
+  if (startingDay_ > 0 && firstDay === 0) {
     firstDay = 7;
   }
 
+  const offsetPrevMonth = firstDay - startingDay_;
   const daysInCalendar = daysInMonth(month, year);
   const calendar: TDate[][] = [];
 
@@ -72,15 +115,18 @@ export const getCalendar = (month: number, year: number, startingDay: number = 1
   const { previousYear, previousMonth } = previous(month, year);
   const daysInPreviousCalendar = daysInMonth(previousMonth, previousYear);
 
+  let weekIsNextMonth = false;
+  let i = 0;
   let date = 1;
+  let dateNextMonth = 0;
 
-  for (let i = 0; i < 6; i += 1) {
+  while (weekIsNextMonth === false) {
     // Create week array
     calendar.push([]);
 
     // creating individual cells, filing them up with data.
     for (let j = 0; j < 7; j += 1) {
-      if (i === 0 && j < firstDay - startingDay) {
+      if (i === 0 && j < offsetPrevMonth) {
         const previousMonthDate = new Date(previousYear, previousMonth, daysInPreviousCalendar - j)
 
         // Add previous month date
@@ -94,21 +140,22 @@ export const getCalendar = (month: number, year: number, startingDay: number = 1
         // Next month date
         const lastIndex = calendar.length - 1;
         const lastWeek = calendar[lastIndex];
-        const lastWeekLength = lastWeek.length;
-        const remainingDays = 7 - lastWeekLength;
+        const wholeWeekIsNextMonth = j === 0 && weekIsNextMonth;
+        const remainingDays = 7 - (wholeWeekIsNextMonth ? 0 : lastWeek.length);
 
         for (let x = 0; x < remainingDays; x += 1) {
-          const nextMonthDate = new Date(nextYear, nextMonth, x + 1)
-
+          const nextMonthDate = new Date(nextYear, nextMonth, dateNextMonth + 1)
+          
+          dateNextMonth += 1;
           lastWeek.push({
             date: nextMonthDate,
-            day: x + 1,
+            day: dateNextMonth,
             weekday: WEEKDAYS[nextMonthDate.getDay()],
             isCurrentMonth: false,
           });
         }
 
-        break;
+        weekIsNextMonth = true;
       } else {
         const currentMonthDate = new Date(year, month, date)
 
@@ -123,6 +170,10 @@ export const getCalendar = (month: number, year: number, startingDay: number = 1
         date += 1;
       }
     }
+
+    i += 1;
+    const shouldStopPopulate = extraWeek ? i >= MAX_WEEK_ROW : date > daysInCalendar === true;
+    weekIsNextMonth = shouldStopPopulate;
   }
 
   return {

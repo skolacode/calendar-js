@@ -50,7 +50,7 @@ response:
 
 ### Methods
 
-**getCalendar(month: number, year: number, startingDay?: number): [ICalendar](#types)**
+**getCalendar(month: number, year: number, options?: [IOptions](#types)): [ICalendar](#types)**
 
 Parameters
 
@@ -58,7 +58,8 @@ Parameters
 | ----------- | ------ | -------- | ------- | -------------------------------------------------------------- |
 | month       | Number | Yes      | -       | The month of the calendar (0 to 11). 0 = January, 1 = February |
 | year        | Number | Yes      | -       | The year of the calendar                                       |
-| startingDay | Number | No       | 1       | The starting day of the week (0 to 6). 0 = Sunday, 1 = Monday  |
+| options.startingDay | [TStartingDay](#types) | No       | 1       | The starting day of the week (0 to 6). 0 = Sunday, 1 = Monday  |
+| options.extraWeek | Boolean | No       | true       | Calendar rows are fixed to 6 regardless of all the 6th week consists of days for next month  |
 
 ---
 
@@ -97,6 +98,13 @@ interface ICalendar {
     month: number,
     year: number,
   };
+}
+
+export type TStartingDay = 0 | 'SUNDAY' | 'Sunday' | 'sunday' | 1 | 'MONDAY' | 'Monday' | 'monday' | 2 | 'TUESDAY' | 'Tuesday' | 'tuesday' | 3 | 'WEDNESDAY' | 'Wednesday' | 'wednesday' | 4 | 'THURSDAY' | 'Thursday' | 'thursday' | 5 | 'FRIDAY' | 'Friday' | 'friday' | 6 | 'SATURDAY' | 'Saturday' | 'saturday';
+
+export interface IOptions {
+  startingDay?: TStartingDay | number;
+  extraWeek?: boolean;
 }
 ```
 
